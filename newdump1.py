@@ -40,10 +40,18 @@ except:
     file="/sdcard/RDUMP.txt"
 
 def s(code):
-    ln=15-len(code)
-    lim=int("9"*(ln))+1
+
+    ln = 15 - len(code)
+
+    lim = int("9" * (ln)) + 1
+
     for i in range(lim):
-        uids.append(code+str(i).zfill(ln))
+
+        uid = code + str(i).zfill(ln)
+
+        if uid[0:5] in ["10000", "10001", "10002", "10003", "10004", "10005", "10006", "10007", "10008", "10009"]:
+
+            uids.append(uid)
 
 def gen(code,tt):
     clear()
