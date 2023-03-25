@@ -110,7 +110,7 @@ def getname(uid):
         n+=1
         
         print(f"\033[1;32m{uid} | {name}")
-        open(file,"a").write(uid+" | "+name+)
+        open(file,"a").write(uid+" | "+name )
     else:
         print(f"\033[1;34m{uid} | {name}")
     
