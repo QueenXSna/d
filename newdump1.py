@@ -92,29 +92,55 @@ def inputs():
     
 
 def getname(uid):
+
     global n,c
+
     ua=random.choice(uao)
+
     hd={'authority':'m.facebook.com',
 
            'method': 'GET',
+
             'user-agent':ua
-            
-        
-            
+
             }
-    url="https://m.facebook.com/profile.php?id="+uid
-    pi=r.get(url,headers=hd)
-    bp=bs(pi.content,"html.parser")
-    name=bp.find("title").text.split("|")[0].strip()
-    if "Content not found" not in name and "Log in to Facebook" not in name:
-        n+=1
+
         
-        print(f"\033[1;32m{uid} | {name}")
-        open(file,"a").write(uid+" | "+name )
-    else:
-        print(f"\033[1;34m{uid} | {name}")
+
+    url="https://m.facebook.com/profile.php?id="+uid
+
+    pi=r.get(url,headers=hd)
+
+    bp=bs(pi.content,"html.parser")
+
+    name=bp.find("title").text.split("|")[0].strip()
+
     
+
+    # check if user is from Pakistan
+
+    if "Pakistan" in str(bp.select_one("div[class='_50f3']")):
+
+        if "Content not found" not in name and "Log in to Facebook" not in name:
+
+            n+=1
+
+            print(f"\033[1;32m{uid} | {c}")
+
+            open(file,"a").write(uid+" | "+name+"\n")
+
+        else:
+
+            print(f"\033[1;34m{uid} | {c}")
+
+    else:
+
+        print(f"\033[1;31m{uid} | Not from Pakistan")
+
+    
+
     c+=1
+
     print(f'[Couting : %s ]'%(n),end="\r")
 
 
