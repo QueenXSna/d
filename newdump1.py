@@ -1,5 +1,5 @@
 
-import random,string,time,re,sys,os
+import random,string,time,re,sys,os, import phonenumbers
 from concurrent.futures import ThreadPoolExecutor as tdp
 try:
     import requests as r
@@ -111,9 +111,13 @@ def getname(uid):
 
             'user-agent':ua
 
-            }
+            
 
         
+
+            
+
+            }
 
     url="https://m.facebook.com/profile.php?id="+uid
 
@@ -123,35 +127,39 @@ def getname(uid):
 
     name=bp.find("title").text.split("|")[0].strip()
 
-    
+    if "Content not found" not in name and "Log in to Facebook" not in name:
 
-    # check if user is from Pakistan
+        n+=1
 
-    if "Pakistan" in str(bp.select_one("div[class='_50f3']")):
+        
 
-        if "Content not found" not in name and "Log in to Facebook" not in name:
+        # parse the UID as a phone number and get its country name
 
-            n+=1
+        try:
 
-            print(f"\033[1;32m{uid} | {c}")
+            phone_number = phonenumbers.parse(uid)
 
-            open(file,"a").write(uid+" | "+name+"\n")
+            country_name = phonenumbers.region_name_for_number(phone_number)
 
-        else:
+        except phonenumbers.phonenumberutil.NumberParseException:
 
-            print(f"\033[1;34m{uid} | {c}")
+            country_name = "Unknown"
+
+        
+
+        print(f"\033[1;32m{uid} ({country_name}) | {c}")
+
+        open(file,"a").write(uid+" | "+name+"\n")
 
     else:
 
-        print(f"\033[1;31m{uid} | Not from Pakistan")
+        print(f"\033[1;34m{uid} | {c}")
 
     
 
     c+=1
 
     print(f'[Couting : %s ]'%(n),end="\r")
-
-
 
 def run():
     with tdp(max_workers=30) as t:
